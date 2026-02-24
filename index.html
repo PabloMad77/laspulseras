@@ -250,11 +250,18 @@ background:#25D366;
 <section>
 <h2>Solicita tu Cotización</h2>
 
-<form onsubmit="sendForm(); return false;">
-<input type="text" id="name" placeholder="Nombre" required>
-<input type="email" id="email" placeholder="Correo electrónico" required>
-<textarea id="details" placeholder="Cantidad, colores, texto a grabar..." required></textarea>
+<form id="quoteForm" action="https://formsubmit.co/pabloemad@gmail.com" method="POST">
+
+<input type="hidden" name="_captcha" value="false">
+<input type="hidden" name="_subject" value="Nueva cotización - LasPulseras">
+<input type="hidden" name="_template" value="table">
+
+<input type="text" name="Nombre" id="name" placeholder="Nombre" required>
+<input type="email" name="Email" id="email" placeholder="Correo electrónico" required>
+<textarea name="Detalles" id="details" placeholder="Cantidad, colores, texto a grabar..." required></textarea>
+
 <button type="submit">Enviar Cotización</button>
+
 </form>
 
 </section>
@@ -301,11 +308,26 @@ let url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
 window.open(url, "_blank");
 }
 
-function sendForm() {
+document.getElementById("quoteForm").addEventListener("submit", function(e) {
+e.preventDefault();
+
 let name = document.getElementById("name").value;
 let email = document.getElementById("email").value;
 let details = document.getElementById("details").value;
 
+// 1️⃣ Send Email via FormSubmit
+fetch(this.action, {
+method: "POST",
+body: new FormData(this)
+});
+
+// 2️⃣ Show Confirmation
+alert("Gracias " + name + ". Hemos recibido tu solicitud. Te contactaremos pronto por WhatsApp.");
+
+// 3️⃣ Reset Form
+this.reset();
+
+// 4️⃣ Open WhatsApp with details
 let message = "Nueva cotización:%0A%0A" +
 "Nombre: " + name + "%0A" +
 "Correo: " + email + "%0A" +
@@ -315,7 +337,7 @@ let phone = "528110494660";
 let url = "https://wa.me/" + phone + "?text=" + message;
 
 window.open(url, "_blank");
-}
+});
 
 document.querySelectorAll('.gallery img').forEach(img => {
 img.addEventListener('click', function(){
